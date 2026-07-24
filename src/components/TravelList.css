@@ -141,3 +141,7 @@
         grid-template-columns: 1fr;
     }
 }
+
+.travel-list {
+    margin-top: 20px;
+}
