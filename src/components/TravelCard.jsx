@@ -1,5 +1,5 @@
 function TravelCard({travel, onEdit, onDelete}) {
-    const stars = '⭐'.repeat(TravelCard.rating)
+    const stars = '⭐'.repeat(travel.rating)
 
     return (
         <div className="travel-card">
