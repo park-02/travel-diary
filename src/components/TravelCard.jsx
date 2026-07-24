@@ -1,4 +1,4 @@
-function TravelCard() {
+function TravelCard({travel, onEdit, onDelete}) {
     const stars = '⭐'.repeat(TravelCard.rating)
 
     return (
