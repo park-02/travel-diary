@@ -11,8 +11,44 @@ export default function App() {
       return JSON.parse(saved);
     }
 
-    return [];
+    return [
+      {
+        id: 1,
+        name: '에펠탑',
+        country: '프랑스',
+        city: '파리',
+        date: '2024-07-15',
+        image: 'https://media.triple.guide/triple-cms/c_limit,f_auto,h_1024,w_1024/953697b8-a36d-43e3-8dad-ee22eb3a3dea.jpeg',
+        rating: 5,
+        memo: '정말 아름다웠어요! 야경이 최고였습니다.',
+        createdAt: '2024-07-20T10:30:00'
+      },
+      {
+        id: 2,
+        name: '도쿄 타워',
+        country: '일본',
+        city: '도쿄',
+        date: '2024-08-10',
+        image: 'https://cdn.imweb.me/upload/S201805105af3b93f645c8/ace9a84df341f.jpg',
+        rating: 4,
+        memo: '도쿄의 상징! 전망이 정말 좋았어요.',
+        createdAt: '2024-08-15T14:20:00'
+      },
+      {
+        id: 3,
+        name: '콜로세움',
+        country: '이탈리아',
+        city: '로마',
+        date: '2024-09-05',
+        image: 'https://i.namu.wiki/i/mecLdrbH6SANsAVoqJGrYR5XK31DY_6mMbGzSvM_FSrx5DgY9r7HhztOlvH85ecjWalmq08oyzSh2KWGYnAQag.webp',
+        rating: 5,
+        memo: '역사의 무게가 느껴지는 곳이었습니다.',
+        createdAt: '2024-09-10T09:15:00'
+      }
+    ]
   })
+
+
 
   const [editingTravel, setEditingTravel] = useState(null);
 
