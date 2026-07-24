@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import "./TravelForm.css";
 
-export default function TravelForm({ onAdd, editingTravel, onUpdate, onCancelEdit }) {
+import { useState, useEffect } from 'react';
+function TravelForm({ onAdd, editingTravel, onUpdate, onCancelEdit }) {
     const [form, setForm] = useState({
         name: '',
         country: '',
@@ -10,110 +11,60 @@ export default function TravelForm({ onAdd, editingTravel, onUpdate, onCancelEdi
         image: '',
         rating: 5,
         memo: ''
-    })
-
-    const [errors, setErrors] = useState({})    // 에러 메시지 state
-
+    });
+    // 수정 모드일 때 폼에 데이터 채우기
     useEffect(() => {
         if (editingTravel) {
-            // 폼 데이터
-            setForm({
-                name: editingTravel.name,
-                country: editingTravel.country,
-                city: editingTravel.city,
-                date: editingTravel.date,
-                image: editingTravel.image,
-                rating: editingTravel.rating,
-                memo: editingTravel.memo,
-            })
-        } else {
-            // 폼 초기화
-            setForm({
-                name: '',
-                country: '',
-                city: '',
-                date: '',
-                image: '',
-                rating: 5,
-                memo: '',
-            })
+            setForm(editingTravel);
         }
-    }, [editingTravel])
-
-    // handleChange 함수 : input 처
-    // input 태그에 name 속성 지정 
-    // e.target.name으로 필드 구분, e.target.value로 입력된 값 가져오고
-    // rating 필드 Number()로 변환
+    }, [editingTravel]);
     const handleChange = (e) => {
-        const { name, value } = e.target
-        setForm((prev) => ({
-            ...prev, // 기존 필드 값 그대로 유지
-            [name]: name === 'rating' ? Number(value) : value,
-        }))
-        // 사용자가 다시 입력하면 에러메시지 삭제
-        if (errors[name]) {
-            setErrors((prev) => ({ ...prev, [name]: '' }))
-        }
-    }
-
-    const validate = () => {
-        const newErrors = {}
-
-        if (!form.name.trim()) {
-            newErrors.name = '여행 이름을 입력해주세요.'
-        }
-        if (!form.country.trim()) {
-            newErrors.country = '국가를 입력해주세요.'
-        }
-        if (!form.city.trim()) {
-            newErrors.city = '도시를 입력해주세요.'
-        }
-        if (!form.date) {
-            newErrors.date = '날짜를 선택해주세요.'
-        }
-        if (form.rating < 1 || form.rating > 5) {
-            newErrors.rating = '평점은 1~5 사이여야 해요.'
-        }
-
-        setErrors(newErrors)
-
-        // newErrors 객체에 에러 없으면 유효성 통과
-        return Object.keys(newErrors).length === 0
-    }
-
+        const { name, value } = e.target;
+        setForm({ ...form, [name]: value });
+    };
     const handleSubmit = (e) => {
-        e.preventDefault() // 새로고침 방지
+        e.preventDefault();
 
-        if (!validate()) {
-            return; // 유효성 검사 실패하면 여기서 중단
+        if (!form.name || !form.country || !form.city || !form.date) {
+
+            alert('필수 항목을 모두 입력해주세요!');
+            return;
         }
-
         if (editingTravel) {
-            // 수정 모드: 기존 id를 유지한 채 업데이트된 데이터를 넘김
-            onUpdateTravel({
-                ...editingTravel,
-                ...form,
-            });
+            // 수정 모드
+            onUpdate({ ...form, id: editingTravel.id });
         } else {
-            // 새 id를 생성해서 넘김 
-            onAddTravel({
-                id: Date.now(),
+            // 추가 모드
+            const newTravel = {
                 ...form,
-            })
+                id: Date.now(),
+                createdAt: new Date().toISOString()
+            };
+            onAdd(newTravel);
         }
-
-
         // 폼 초기화
-        setForm({ name: '', country: '', city: '', date: '', image: '', rating: 5, memo: '' })
-        setErrors({})
-    }
-
-    // 취소 버튼
+        setForm({
+            name: '',
+            country: '',
+            city: '',
+            date: '',
+            image: '',
+            rating: 5,
+            memo: ''
+        });
+    };
     const handleCancel = () => {
-        setForm({ name: '', country: '', city: '', date: '', image: '', rating: 5, memo: '' });
-        setErrors({});
-        if (onCancelEdit) onCancelEdit();
-    }
+        setForm({
+            name: '',
+            country: '',
+            city: '',
+            date: '',
+            image: '',
+            rating: 5,
+            memo: ''
+        });
+        onCancelEdit();
+    };
 
     return (
         <form className="travel-form" onSubmit={handleSubmit}>
@@ -168,9 +119,10 @@ export default function TravelForm({ onAdd, editingTravel, onUpdate, onCancelEdi
                     name="image"
                     value={form.image}
                     onChange={handleChange}
-                    placeholder="https://i.namu.wiki/i/lClVZJsn6bthAnbZXTTqmH_FI-q_Q0-KO6juNNa7l5jkz01sHORr09SXASvzwrJ_CL1MRS3qnpARuMJgbJx_SXwk_bSbGjRvzGvZ9Nz0xmnOsC_tT36uN2VyUes8rv9_R8DhD6fLduB3Ee2Mp7dOYg.webp"
+                    placeholder="https://example.com/image.jpg"
                 />
             </div>
+
             <div className="form-group">
                 <label>평점: {form.rating}점</label>
                 <input
@@ -182,6 +134,7 @@ export default function TravelForm({ onAdd, editingTravel, onUpdate, onCancelEdi
                     onChange={handleChange}
                 />
             </div>
+
             <div className="form-group">
                 <label>메모</label>
                 <textarea
@@ -203,9 +156,12 @@ export default function TravelForm({ onAdd, editingTravel, onUpdate, onCancelEdi
                 )}
             </div>
         </form >
-    )
-
+    );
 }
+
+export default TravelForm;
+
+
 
 
 
