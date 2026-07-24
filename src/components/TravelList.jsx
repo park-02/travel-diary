@@ -1,4 +1,5 @@
 import TravelCard from './TravelCard'
+import './TravelList.css'
 
 export default function TravelList({ travels, onEdit, onDelete }) {
     if (travels.length === 0) { // travels에 아무것도 없으면 아래 텍스트 출력
